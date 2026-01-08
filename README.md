@@ -2,4 +2,5 @@
 
 Utility library for Arduino Micro Libraries
 
-Git Url : https://github.com/thomasfredericks/MicroTof
+Git URL : https://github.com/thomasfredericks/MicroTof
+
