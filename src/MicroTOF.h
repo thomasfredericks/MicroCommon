@@ -1,4 +1,13 @@
+
+
+#ifndef __MICRO_TOF_H__
+#define __MICRO_TOF_H__
+
 #include <Arduino.h>
+
+#ifndef MICRO_TOF_COUNT_OF_ARRAY
+#define MICRO_TOF_COUNT_OF_ARRAY(X)  (sizeof(X) / sizeof(X[0]))
+#endif
 
 namespace MicroTof
 {
@@ -71,3 +80,4 @@ namespace MicroTof
     return a * (1 - xf) + b * xf;
   }
 }
+#endif
