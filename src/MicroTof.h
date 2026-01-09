@@ -13,44 +13,23 @@
 namespace MicroTof
 {
 
-  float mapf(float x, float in_min, float in_max, float out_min, float out_max)
+  int modulo(int value, int modulus)
   {
-    const float run = in_max - in_min;
-    if (run == 0)
-    {
-      // log_e("map(): Invalid input range, min == max");
-      return 0;
-    }
-    const float rise = out_max - out_min;
-    const float delta = x - in_min;
-    return (delta * rise) / run + out_min;
+    return (value % modulus + modulus) % modulus;
   }
 
-  int wrapExclusive(int value, int min, int max)
-  {
-    int range = max - min;
-    if (range == 0)
-      return min; // avoid division by zero
+  // Wrap 'value' to the range [min, max] (max inclusive)
+  int wrap(int value, int min, int max)
+{
+    int range = max - min + 1; // +1 for max-inclusive
+    if (range <= 1)
+        return min;
 
-    int result = (value - min) % range;
-    if (result < 0)
-      result += range; // ensure positive result
+    return MicroTof::modulo(value - min, range) + min;
+}
 
-    return result + min;
-  }
-
-  // Clamps 'value' to the range [min, max_exclusive-1]
-  int32_t clampExclusive(int32_t value, int32_t min, int32_t max)
-  {
-    if (value <= min)
-      return min;
-    if (value >= max)
-      return max - 1;
-    return value;
-  }
-
-  // Clamps 'value' to the range [min, max]
-  float clampInclusivef(float value, float min, float max)
+  // Clamps 'value' to the range [min, max] (max inclusive)
+  int32_t clamp(int32_t value, int32_t min, int32_t max)
   {
     if (value <= min)
       return min;
@@ -59,19 +38,42 @@ namespace MicroTof
     return value;
   }
 
-  float wrapExclusivef(float value, float min, float max)
+  // Clamps 'value' to the range [min, max] (max inclusive)
+  float clampf(float value, float min, float max)
   {
-    float range = max - min;
-    if (range == 0.0f)
-      return min; // avoid division by zero
-
-    float result = fmodf(value - min, range);
-    if (result < 0.0f)
-      result += range; // ensure positive result
-
-    return result + min;
+    if (value <= min)
+      return min;
+    if (value >= max)
+      return max;
+    return value;
   }
 
+  float mapf(float x, float in_min, float in_max, float out_min, float out_max)
+  {
+    const float run = in_max - in_min;
+    if (run == 0)
+    {
+      return 0;
+    }
+    const float rise = out_max - out_min;
+    const float delta = x - in_min;
+    return (delta * rise) / run + out_min;
+  }
+
+  /*
+    float wrapf(float value, float min, float max)
+    {
+      float range = max - min;
+      if (range == 0.0f)
+        return min; // avoid division by zero
+
+      float result = fmodf(value - min, range);
+      if (result < 0.0f)
+        result += range; // ensure positive result
+
+      return result + min;
+    }
+   */
   // Deterministic random (fast hash)
   uint32_t randomHash32(uint32_t x)
   {
@@ -102,23 +104,22 @@ namespace MicroTof
     return a * (1 - xf) + b * xf;
   }
 
-
   // Simple C-style resizable array template
   template <typename T>
-  class ResizableArray
+  class GrowableArray
   {
     T *data_ = nullptr;   // pointer to array
     size_t count_ = 0;    // number of elements used
     size_t capacity_ = 4; // allocated size
 
   public:
-    ResizableArray(size_t initialCapacity = 4)
+    GrowableArray(size_t initialCapacity = 4)
         : capacity_(initialCapacity)
     {
       data_ = (T *)malloc(sizeof(T) * capacity_);
     }
 
-    ~ResizableArray()
+    ~GrowableArray()
     {
       if (data_)
         free(data_);
