@@ -216,7 +216,7 @@ namespace MicroTof
 
 // ==============================================
 // Simple fixed-size pointer list
-template <typename T, size_t Capacity = 8>
+/* template <typename T, size_t Capacity = 8>
 class PointerList
 {
     static_assert(std::is_pointer<T>::value, "PointerList<T>: T must be a pointer type");
@@ -248,7 +248,7 @@ public:
         data_[count_++] = item;
         return true;
     }
-};
+}; */
 
 // ==============================================
 // Key + pointer pair
@@ -257,10 +257,12 @@ struct KeyPointerPair
 {
     static_assert(std::is_pointer<T>::value, "KeyPointerPair<T>: T must be a pointer type");
 
-    const char *key_;
-    T pointer_; // store pointer internally
+    const char *key_ = nullptr;
+    T pointer_ = nullptr; 
 
-    KeyPointerPair(const char *key, T pointer) : key_(key), pointer_(pointer) {}
+    KeyPointerPair(const char *key, T pointer) : key_(key), pointer_(pointer) {};
+
+    KeyPointerPair() {};
 };
 
 // ==============================================
@@ -269,31 +271,36 @@ template <typename T, size_t Capacity = 8>
 class Binder
 {
     static_assert(std::is_pointer<T>::value, "Binder<T>: T must be a pointer type");
-
-    PointerList<KeyPointerPair<T> *, Capacity> pairs_;
+    size_t count_ = 0;
+    KeyPointerPair<T> pairs_[Capacity];
 
 public:
     Binder() = default;
 
     ~Binder()
     {
-        for (size_t i = 0; i < pairs_.getCount(); ++i)
-            delete pairs_.get(i);
+
     }
 
     // bind by pointer
     bool add(const char *key, T pointer)
     {
-        return pairs_.add(new KeyPointerPair<T>{key, pointer});
+        if (count_ >= Capacity)
+            return false; // reached max capacity
+
+        pairs_[count_].key_ = key;
+        pairs_[count_].pointer_ = pointer;
+        count_++;
+        return true;
     }
 
     // get pointer to the stored value by key
     T get(const char *key)
     {
-        for (size_t i = 0; i < pairs_.getCount(); ++i)
+        for (size_t i = 0; i < count_; ++i)
         {
-            if (strcmp(pairs_.get(i)->key_, key) == 0)
-                return pairs_.get(i)->pointer_;
+            if (strcmp(pairs_[i].key_, key) == 0)
+                return pairs_[i].pointer_;
         }
         return nullptr;
     }
@@ -301,12 +308,12 @@ public:
     // get pointer by index
     T get(size_t index)
     {
-        if (index >= pairs_.getCount())
+        if (index >= count_)
             return nullptr;
-        return pairs_.get(index)->pointer_;
+        return pairs_[index].pointer_;
     }
 
-    size_t getCount() const { return pairs_.getCount(); }
+    size_t getCount() const { return count_; }
 };
 
 } // namespace MicroTof
