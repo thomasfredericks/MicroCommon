@@ -4,8 +4,7 @@ Utility library for Arduino Micro Libraries
 
 Git URL : https://github.com/thomasfredericks/MicroCommon
 
-Namespace: `Micro`
-
+Namespace: Micro
 
 ## Functions
 
@@ -13,111 +12,141 @@ Namespace: `Micro`
 
 Computes the modulo of a value, ensuring a non-negative result.
 
-- **Parameters:**
-  - `value` – The input value (int32_t).
-  - `modulus` – The modulus to apply (int32_t).
-- **Returns:** Non-negative remainder of `value % modulus` (int32_t).
-
-
+- Parameters:
+  - `value`:  Input value (`int32_t`)
+  - `modulus`:  Modulus value (`int32_t`)
+- Returns:
+  - Value wrapped in the range `[0, modulus-1]` (`int32_t`)
 
 ### `Micro::wrap(value, min, max)`
 
-Wraps an integer value into the inclusive range `[min, max]`.
+Wraps `value` to the inclusive range `[min, max]`.
 
-- **Parameters:**
-  - `value` – The value to wrap (int32_t).
-  - `min` – The minimum bound of the range (int32_t).
-  - `max` – The maximum bound of the range (inclusive) (int32_t).
-- **Returns:** Wrapped value within `[min, max]` (int32_t).
-
-
+- Parameters:
+  - `value`:  Input value (`int32_t`)
+  - `min`:  Minimum value of range (`int32_t`)
+  - `max`:  Maximum value of range (`int32_t`)
+- Returns:
+  - Wrapped value in `[min, max]` (`int32_t`)
 
 ### `Micro::clamp<T>(value, min, max)`
 
-Clamps a value to lie within the inclusive range `[min, max]`.
+Clamps a value to the inclusive range `[min, max]`.
 
-- **Parameters:**
-  - `value` – The value to clamp (any numeric type T).
-  - `min` – The minimum bound (T).
-  - `max` – The maximum bound (T).
-- **Returns:** Clamped value (T).
-
-
+- Parameters:
+  - `value`:  Input value (`T`)
+  - `min`:  Minimum allowed value (`T`)
+  - `max`:  Maximum allowed value (`T`)
+- Returns:
+  - Clamped value (`T`)
 
 ### `Micro::map<T>(value, in_min, in_max, out_min, out_max)`
 
-Linearly maps a value from one range to another.
+Maps a value from the input range `[in_min, in_max]` to the output range `[out_min, out_max]`.
 
-- **Parameters:**
-  - `value` – The input value (T).
-  - `in_min` – Lower bound of input range (T).
-  - `in_max` – Upper bound of input range (T).
-  - `out_min` – Lower bound of output range (T).
-  - `out_max` – Upper bound of output range (T).
-- **Returns:** Value mapped to the output range (T).
-
-
+- Parameters:
+  - `value`:  Input value (`T`)
+  - `in_min`:  Minimum of input range (`T`)
+  - `in_max`:  Maximum of input range (`T`)
+  - `out_min`:  Minimum of output range (`T`)
+  - `out_max`:  Maximum of output range (`T`)
+- Returns:
+  - Mapped value in output range (`T`)
 
 ### `Micro::randomHash32(x)`
 
-Generates a deterministic 32-bit pseudo-random number from a seed.
+Generates a deterministic 32-bit hash from the input integer.
 
-- **Parameters:**
-  - `x` – Seed value (uint32_t).
-- **Returns:** Pseudo-random 32-bit number (uint32_t).
-
+- Parameters:
+  - `x`:  Input seed (`uint32_t`)
+- Returns:
+  - Deterministic hashed value (`uint32_t`)
 
 ### `Micro::rand01(x)`
 
-Generates a pseudo-random float in `[0.0, 1.0]` from an integer seed.
+Generates a deterministic pseudo-random float in the range `[0.0, 1.0]`.
 
-- **Parameters:**
-  - `x` – Seed value (uint32_t).
-- **Returns:** Pseudo-random number in `[0.0, 1.0]` (float).
-
+- Parameters:
+  - `x`:  Input seed (`uint32_t`)
+- Returns:
+  - Pseudo-random float (`float`)
 
 ### `Micro::interpolatedRandom01(x)`
 
-Generates a deterministic pseudo-random float in `[0.0, 1.0]` with linear interpolation between integer inputs. Integer part is the random seed for the first random value. Fractional part is the interpolation with the next random value.
+Generates a deterministic pseudo-random float in `[0.0, 1.0]` with linear interpolation between integer steps.
 
-- **Parameters:**
-  - `x` – Input value (float).
-- **Returns:** Interpolated pseudo-random number (float).
+- Parameters:
+  - `x`:  Input value (`float`)
+- Returns:
+  - Interpolated pseudo-random float (`float`)
 
-
-
-## Classes and Structs
+## Structs and Classes
 
 ### `Micro::Bind<T>`
 
-Holds a key-pointer pair.
+Represents a key-pointer pair.
 
-- **Template Parameter:** `T` – Pointer type.
-- **Description:** Stores a key string and a pointer of type `T`.
-- **Members:**
-  - `key_` – Key string (const char*).
-  - `pointer_` – Stored pointer (T*).
-- **Constructors:**
-  - `Bind(key, pointer)` – Initializes the pair with a key (const char*) and pointer (T*).
-  - `Bind()` – Default constructor.
+- Template Parameter: T – Type of the pointer.
+
+```cpp
+Bind myBind(key, pointer);
+```
+Constructs a key-pointer binding.
+
+- Parameters:
+  - `key`:  Key string (`const char *`)
+  - `pointer`:  Pointer to bind (`T`)
 
 ### `Micro::Binder<T>`
 
-Stores a collection of `[key, pointer]` pairs and provides access.
+Collection of key-pointer pairs.
 
-- **Template Parameter:** `T` – Pointer type.
-- **Description:** Maintains an array of `Micro::Bind<T>` pairs and allows retrieval by key or index.
-- **Members:**
-  - `count_` – Number of stored pairs (size_t).
-  - `pairs_` – Pointer to array of pairs (Bind<T>*).
-- **Constructors:**
-  - `Binder(pairs, count)` – Initializes with array of pairs (Bind<T>*) and count (size_t).
-- **Methods:**
-  - `get(key)` – Returns pointer associated with the key (T*) or nullptr if not found.  
-    - **Parameters:** `key` – Key string (const char*).  
-    - **Returns:** Pointer (T*).
-  - `get(index)` – Returns pointer at given index or nullptr if out of bounds.  
-    - **Parameters:** `index` – Index of pair (size_t).  
-    - **Returns:** Pointer (T*).
-  - `getCount()` – Returns number of stored pairs.  
-    - **Returns:** Count (size_t).
+- Template Parameter: T – Type of pointer stored.
+
+```cpp
+Binder myBinder(pairs, count);
+```
+Constructs a binder with an array of `Bind<T>` and the number of elements.
+
+- Parameters:
+  - `pairs`:  Array of key-pointer pairs (`Bind<T> *`)
+  - `count`:  Number of elements (`size_t`)
+
+####  Method `get(key);`
+
+```cpp
+T value = myBinder.get(key);
+```
+
+Retrieves the pointer associated with the given key.
+
+- Parameters:
+  - `key`:  Key string (`const char *`)
+- Returns:
+  - Pointer associated with the key, or `nullptr` if not found (`T`)
+
+####  Method `get(index);`
+
+```cpp
+T value = myBinder.get(index);
+```
+
+Retrieves the pointer at the given index.
+
+- Parameters:
+  - `index`:  Index in the array (`size_t`)
+- Returns:
+  - Pointer at the index, or `nullptr` if out of bounds (`T`)
+
+####  Method `getCount();`
+
+```cpp
+size_t count = myBinder.getCount();
+```
+
+Gets the number of key-pointer pairs stored.
+
+- Returns:
+  - Count of elements (`size_t`)
+
+
