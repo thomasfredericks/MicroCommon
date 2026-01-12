@@ -253,21 +253,57 @@ public:
 // ==============================================
 // Key + pointer pair
 template <typename T>
-struct KeyPointerPair
+struct Bind
 {
-    static_assert(std::is_pointer<T>::value, "KeyPointerPair<T>: T must be a pointer type");
+    static_assert(std::is_pointer<T>::value, "Bind<T>: T must be a pointer type");
 
     const char *key_ = nullptr;
     T pointer_ = nullptr; 
 
-    KeyPointerPair(const char *key, T pointer) : key_(key), pointer_(pointer) {};
+    Bind(const char *key, T pointer) : key_(key), pointer_(pointer) {};
 
-    KeyPointerPair() {};
+    Bind() {};
 };
 
 // ==============================================
 // Binder
-template <typename T, size_t Capacity = 8>
+template <typename T>
+class Binder
+{
+    static_assert(std::is_pointer<T>::value, "Binder<T>: T must be a pointer type");
+    size_t count_ = 0;
+    Bind<T> *pairs_;
+
+public:
+    Binder(Bind<T> *pairs, size_t count)
+        : pairs_(pairs), count_(count)
+    {
+
+    };
+
+    // get pointer to the stored value by key
+    T get(const char *key)
+    {
+        for (size_t i = 0; i < count_; ++i)
+        {
+            if (strcmp(pairs_[i].key_, key) == 0)
+                return pairs_[i].pointer_;
+        }
+        return nullptr;
+    }
+
+    // get pointer by index
+    T get(size_t index)
+    {
+        if (index >= count_)
+            return nullptr;
+        return pairs_[index].pointer_;
+    }
+
+    size_t getCount() const { return count_; }
+};
+
+/* template <typename T, size_t Capacity = 8>
 class Binder
 {
     static_assert(std::is_pointer<T>::value, "Binder<T>: T must be a pointer type");
@@ -314,7 +350,7 @@ public:
     }
 
     size_t getCount() const { return count_; }
-};
+}; */
 
 } // namespace MicroTof
 #endif
