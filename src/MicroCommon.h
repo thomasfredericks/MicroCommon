@@ -10,7 +10,7 @@
 #include <cassert>
 #include <cstring> */
 
-namespace MicroCommon
+namespace Micro
 {
 
   int modulo(int value, int modulus)
@@ -25,7 +25,7 @@ namespace MicroCommon
     if (range <= 1)
       return min;
 
-    return MicroCommon::modulo(value - min, range) + min;
+    return Micro::modulo(value - min, range) + min;
   }
 
   // Clamps 'value' to the range [min, max] (max inclusive)
