@@ -13,15 +13,15 @@
 namespace Micro
 {
 
-  int modulo(int value, int modulus)
+  int32_t modulo(int32_t value, int32_t modulus)
   {
     return (value % modulus + modulus) % modulus;
   }
 
   // Wrap 'value' to the range [min, max] (max inclusive)
-  int wrap(int value, int min, int max)
+  int32_t wrap(int32_t value, int32_t min, int32_t max)
   {
-    int range = max - min + 1; // +1 for max-inclusive
+    int32_t range = max - min + 1; // +1 for max-inclusive
     if (range <= 1)
       return min;
 
