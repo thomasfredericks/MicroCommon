@@ -1,11 +1,11 @@
 {
-  "name": "MicroTof",
+  "name": "MicroCommon",
   "version": "0.0.1",
   "description": "Utility library for Arduino Micro Libraries",
   "keywords": "Utility",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thomasfredericks/MicroTof.git"
+    "url": "https://github.com/thomasfredericks/MicroCommon.git"
   },
   "authors": [
     {
@@ -15,7 +15,7 @@
     }
   ],
   "license": "MIT",
-  "homepage": "https://github.com/thomasfredericks/MicroTof",
+  "homepage": "https://github.com/thomasfredericks/MicroCommon",
   "dependencies": [
   ],
   "frameworks": "*",
