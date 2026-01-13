@@ -112,10 +112,10 @@ Constructs a binder with an array of `Bind<T>` and the number of elements.
   - `pairs`:  Array of key-pointer pairs (`Bind<T> *`)
   - `count`:  Number of elements (`size_t`)
 
-####  Method `get(key);`
+####  Method `getPointer(key);`
 
 ```cpp
-T value = myBinder.get(key);
+T value = myBinder.getPointer(key);
 ```
 
 Retrieves the pointer associated with the given key.
@@ -125,10 +125,10 @@ Retrieves the pointer associated with the given key.
 - Returns:
   - Pointer associated with the key, or `nullptr` if not found (`T`)
 
-####  Method `get(index);`
+####  Method `getPointer(index);`
 
 ```cpp
-T value = myBinder.get(index);
+T value = myBinder.getPointer(index);
 ```
 
 Retrieves the pointer at the given index.
@@ -137,6 +137,19 @@ Retrieves the pointer at the given index.
   - `index`:  Index in the array (`size_t`)
 - Returns:
   - Pointer at the index, or `nullptr` if out of bounds (`T`)
+
+####  Method `getKey(index);`
+
+```cpp
+const char * value = myBinder.getKey(index);
+```
+
+Retrieves the key at the given index.
+
+- Parameters:
+  - `index`:  Index in the array (`size_t`)
+- Returns:
+  - Key at the index (`const char *`), or `nullptr` if out of bounds 
 
 ####  Method `getCount();`
 
