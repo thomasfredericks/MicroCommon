@@ -89,7 +89,7 @@ namespace Micro
   }
 
   // ==============================================
-
+/*
   // Binds a [key, pointer] pair
   template <typename T>
   struct Bind
@@ -148,6 +148,6 @@ namespace Micro
 
     size_t getCount() const { return count_; }
   };
-
+*/
 } // namespace MicroCommon
 #endif
